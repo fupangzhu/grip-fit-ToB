@@ -59,7 +59,7 @@ export function QuestionnairePage() {
       </div>
 
       <button onClick={() => {
-        dispatch({ type: 'UPDATE_HE_PROJECT', payload: { id: project.id, currentStep: 'participants' } });
+        dispatch({ type: 'UPDATE_HE_PROJECT', payload: { id: project.id, updates: { currentStep: 'participants' } } });
         navigate(`/tob/he/projects/${id}/run/participants`);
       }}
         className="w-full py-3 rounded-xl flex items-center justify-center gap-1 text-white"

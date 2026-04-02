@@ -101,7 +101,7 @@ export function Participants() {
       )}
 
       <button onClick={() => {
-        dispatch({ type: 'UPDATE_HE_PROJECT', payload: { id: project.id, currentStep: 'lab' } });
+        dispatch({ type: 'UPDATE_HE_PROJECT', payload: { id: project.id, updates: { currentStep: 'lab' } } });
         navigate(`/tob/he/projects/${id}/run/lab`);
       }}
         className="w-full py-3 rounded-xl flex items-center justify-center gap-1 text-white"

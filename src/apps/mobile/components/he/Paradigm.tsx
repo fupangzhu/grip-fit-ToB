@@ -66,8 +66,8 @@ export function HEParadigm() {
       deadline: '', memberCount: 1, progress: 5,
     };
     dispatch({ type: 'ADD_HE_PROJECT', payload: newProject });
+    navigate('/tob/he/projects', { state: { highlightId: newId } });
     dispatch({ type: 'RESET_WIZARD' });
-    navigate(`/tob/he/projects/${newId}/run/questionnaire`);
   }
 
   return (

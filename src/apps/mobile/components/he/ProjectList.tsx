@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { Plus, Search, ArrowRight, Users, Filter } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router';
+import { Plus, Search, ArrowRight, Users, Filter, CheckCircle } from 'lucide-react';
 import { useAppStore, STATUS_COLORS, STATUS_LABELS, RESEARCH_TYPE_LABELS, RESEARCH_TYPE_ICONS, ExperimentStatus, RUN_STEPS } from '../../store';
 
 const FILTERS: { key: ExperimentStatus | 'all'; label: string }[] = [
@@ -12,8 +12,28 @@ const FILTERS: { key: ExperimentStatus | 'all'; label: string }[] = [
 export function HEProjectList() {
   const { state } = useAppStore();
   const navigate = useNavigate();
+  const location = useLocation();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<ExperimentStatus | 'all'>('all');
+  const [highlightId, setHighlightId] = useState<string | null>(
+    (location.state as { highlightId?: string } | null)?.highlightId ?? null
+  );
+  const [showBanner, setShowBanner] = useState(!!highlightId);
+  const highlightRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!highlightId) return;
+    // auto-scroll to the highlighted card
+    const timer = setTimeout(() => {
+      highlightRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+    // fade out highlight after 3s
+    const clearTimer = setTimeout(() => {
+      setHighlightId(null);
+      setShowBanner(false);
+    }, 3000);
+    return () => { clearTimeout(timer); clearTimeout(clearTimer); };
+  }, [highlightId]);
 
   const list = state.heProjects.filter(p => {
     if (filter !== 'all' && p.status !== filter) return false;
@@ -23,6 +43,15 @@ export function HEProjectList() {
 
   return (
     <div className="px-4 py-4 space-y-3">
+      {/* Success banner */}
+      {showBanner && (
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl"
+          style={{ background: '#EEF3FF', border: '1px solid #BFD0FF' }}>
+          <CheckCircle size={14} style={{ color: '#3370FF', flexShrink: 0 }} />
+          <span style={{ fontSize: 12, color: '#3370FF', fontWeight: 500 }}>项目已创建，已为你定位到新项目</span>
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <span style={{ fontSize: 16, fontWeight: 700, color: '#1D2129' }}>我的项目</span>
         <button onClick={() => navigate('/tob/he/projects/new')}
@@ -54,9 +83,26 @@ export function HEProjectList() {
       <div className="space-y-2">
         {list.map(p => {
           const confirmed = p.participants.filter(pp => pp.invitationStatus === 'confirmed').length;
+          const isHighlighted = p.id === highlightId;
           return (
-            <div key={p.id} onClick={() => navigate(`/tob/he/projects/${p.id}`)}
-              className="bg-white rounded-xl p-3 border active:bg-gray-50" style={{ borderColor: '#E5E6EB' }}>
+            <div
+              key={p.id}
+              ref={isHighlighted ? highlightRef : null}
+              onClick={() => navigate(`/tob/he/projects/${p.id}`)}
+              className="bg-white rounded-xl p-3 border active:bg-gray-50"
+              style={{
+                borderColor: isHighlighted ? '#3370FF' : '#E5E6EB',
+                borderWidth: isHighlighted ? 2 : 1,
+                boxShadow: isHighlighted ? '0 0 0 3px rgba(51,112,255,0.15)' : undefined,
+                transition: 'box-shadow 0.4s ease, border-color 0.4s ease',
+              }}
+            >
+              {isHighlighted && (
+                <div className="flex items-center gap-1 mb-1.5">
+                  <span className="px-1.5 py-0.5 rounded-full text-white" style={{ fontSize: 9, fontWeight: 700, background: '#3370FF' }}>NEW</span>
+                  <span style={{ fontSize: 10, color: '#3370FF', fontWeight: 500 }}>刚刚创建</span>
+                </div>
+              )}
               <div className="flex items-center gap-2 mb-1">
                 <span className="truncate flex-1" style={{ fontSize: 13, fontWeight: 600, color: '#1D2129' }}>{p.name}</span>
                 <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLORS[p.status]}`} style={{ fontSize: 10, fontWeight: 500 }}>{STATUS_LABELS[p.status]}</span>

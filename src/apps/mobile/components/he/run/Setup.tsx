@@ -50,7 +50,7 @@ export function SetupPage() {
       </div>
 
       <button onClick={() => {
-        dispatch({ type: 'UPDATE_HE_PROJECT', payload: { id: id!, currentStep: 'collect' } });
+        dispatch({ type: 'UPDATE_HE_PROJECT', payload: { id: id!, updates: { currentStep: 'collect' } } });
         navigate(`/tob/he/projects/${id}/run/collect`);
       }}
         className="w-full py-3 rounded-xl flex items-center justify-center gap-1 text-white"
