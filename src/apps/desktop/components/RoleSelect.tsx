@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
-import { FlaskConical, Pencil, ArrowRight, Smartphone, ChevronRight } from 'lucide-react';
+import { FlaskConical, Pencil, ArrowRight, ArrowLeft, Smartphone, ChevronRight } from 'lucide-react';
 import { useAppStore, Role } from '../store';
+
+const CONSUMER_HOME_URL = 'https://grip-fit-version-3-0.vercel.app/';
 
 const ROLES: { key: Role; icon: ReactNode; title: string; subtitle: string; desc: string; primaryColor: string; bgColor: string; borderColor: string; activeBg: string; route: string }[] = [
   {
@@ -47,6 +49,24 @@ export function RoleSelect() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8" style={{ background: '#F7F8FA' }}>
+      {/* Return to consumer home */}
+      <a
+        href={CONSUMER_HOME_URL}
+        className="fixed top-6 left-6 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm transition-all hover:shadow-md"
+        style={{ background: 'white', border: '1px solid #E5E6EB', color: '#4E5969', textDecoration: 'none' }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.color = '#3370FF';
+          e.currentTarget.style.borderColor = '#BFD0FF';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.color = '#4E5969';
+          e.currentTarget.style.borderColor = '#E5E6EB';
+        }}
+      >
+        <ArrowLeft size={15} />
+        返回首页
+      </a>
+
       {/* Brand */}
       <div className="flex items-center gap-3 mb-12">
         <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm" style={{ background: 'linear-gradient(135deg, #3370FF 0%, #1456F0 100%)' }}>

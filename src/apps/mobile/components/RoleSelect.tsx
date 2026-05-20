@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { FlaskConical, Pencil, ArrowRight, Smartphone } from 'lucide-react';
+import { FlaskConical, Pencil, ArrowRight, ArrowLeft, Smartphone } from 'lucide-react';
 import { useAppStore, Role } from '../store';
+
+const CONSUMER_HOME_URL = 'https://grip-fit-version-3-0.vercel.app/';
 
 const ROLES: { key: Role; icon: React.ReactNode; title: string; sub: string; color: string; bg: string; border: string; route: string }[] = [
   { key: 'he', icon: <FlaskConical size={20} />, title: '人因工程师', sub: '实验设计·数据采集·统计分析', color: '#3370FF', bg: '#EEF3FF', border: '#BFD0FF', route: '/tob/he/dashboard' },
@@ -21,6 +23,14 @@ export function RoleSelect() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-5 py-10" style={{ background: '#F7F8FA' }}>
+      <a
+        href={CONSUMER_HOME_URL}
+        className="fixed flex items-center gap-1 px-3 py-1.5 rounded-lg transition-all"
+        style={{ top: 16, left: 16, background: 'white', border: '1px solid #E5E6EB', color: '#4E5969', textDecoration: 'none', fontSize: 12 }}
+      >
+        <ArrowLeft size={13} />
+        返回首页
+      </a>
       <div className="w-full" style={{ maxWidth: 360 }}>
         <div className="flex items-center gap-2 justify-center mb-8">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #3370FF, #1456F0)' }}>
